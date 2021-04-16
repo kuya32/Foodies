@@ -14,8 +14,6 @@
         android:id="@+id/bottomNavView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
         android:background="@color/primaryDarkColor"
         app:itemTextColor="@drawable/bottom_nav_item_selected"
         app:itemIconTint="@drawable/bottom_nav_item_selected"
