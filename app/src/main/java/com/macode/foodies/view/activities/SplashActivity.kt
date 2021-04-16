@@ -1,4 +1,4 @@
-package com.macode.foodies
+package com.macode.foodies.view.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import com.macode.foodies.R
 import com.macode.foodies.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
