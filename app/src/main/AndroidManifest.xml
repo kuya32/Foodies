@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/CustomNoActionBarTheme">
-        <activity android:name=".view.activities.AddUpdateDishActivity"></activity>
+        <activity
+            android:name=".view.activities.AddUpdateDishActivity"
+            android:configChanges="orientation" />
         <activity android:name=".view.activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
