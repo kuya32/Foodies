@@ -7,11 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.macode.foodies.R
-import com.macode.foodies.databinding.FragmentNotificationBinding
+import com.macode.foodies.databinding.FragmentRandomDishBinding
 import com.macode.foodies.viewmodel.NotificationsViewModel
 
-class NotificationFragment : Fragment() {
+class RandomDishFragment : Fragment() {
 
     private lateinit var notificationsViewModel: NotificationsViewModel
 
@@ -24,7 +23,7 @@ class NotificationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         notificationsViewModel = ViewModelProvider(this).get(NotificationsViewModel::class.java)
-        val binding = FragmentNotificationBinding.inflate(inflater, container, false)
+        val binding = FragmentRandomDishBinding.inflate(inflater, container, false)
         notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
             binding.notificationsText.text = it
         })

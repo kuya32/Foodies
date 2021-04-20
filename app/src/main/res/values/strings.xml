@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Foodies</string>
-    <string name="titleHome">Home</string>
-    <string name="dashboard">Dashboard</string>
-    <string name="notifications">Notifications</string>
+    <string name="titleAllDishes">All Dishes</string>
+    <string name="titleFavoriteDishes">Favorite</string>
+    <string name="titleRandomDish">Random Dish</string>
     <string name="splashScreenTitle">Foodies</string>
     <string name="image">Image</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -20,4 +20,6 @@
     <string name="gallery">Gallery</string>
     <string name="item">Item</string>
     <string name="listTitle">List Title</string>
+    <string name="noDishesAdded">No dishes added yet</string>
+    <string name="dishTitle">Dish Title</string>
 </resources>

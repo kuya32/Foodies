@@ -7,11 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.macode.foodies.R
-import com.macode.foodies.databinding.FragmentDashboardBinding
+import com.macode.foodies.databinding.FragmentFavoriteDishesBinding
 import com.macode.foodies.viewmodel.DashboardViewModel
 
-class DashboardFragment : Fragment() {
+class FavoriteDishesFragment : Fragment() {
 
     private lateinit var dashboardViewModel: DashboardViewModel
 
@@ -24,7 +23,7 @@ class DashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         dashboardViewModel = ViewModelProvider(this).get(DashboardViewModel::class.java)
-        val binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        val binding = FragmentFavoriteDishesBinding.inflate(inflater, container, false)
         dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
             binding.dashboardText.text = it
         })

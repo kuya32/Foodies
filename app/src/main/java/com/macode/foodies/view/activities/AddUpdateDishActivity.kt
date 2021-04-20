@@ -5,10 +5,13 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,9 +21,17 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.BitmapCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.textfield.TextInputLayout
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -31,21 +42,35 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
 import com.macode.foodies.R
+import com.macode.foodies.application.FavDishApplication
 import com.macode.foodies.databinding.ActivityAddUpdateDishBinding
 import com.macode.foodies.databinding.CustomListDialogBinding
 import com.macode.foodies.databinding.ImageSelectionDialogBinding
+import com.macode.foodies.model.entities.FavDish
 import com.macode.foodies.utilities.Constants
 import com.macode.foodies.view.adapters.CustomListItemAdapter
+import com.macode.foodies.viewmodel.FavDishViewModel
+import com.macode.foodies.viewmodel.FavDishViewModelFactory
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.io.OutputStream
+import java.util.*
 
 class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
         const val CAMERA = 1
         const val GALLERY = 2
+        const val IMAGE_DIRECTORY = "FavDishImages"
     }
 
     private lateinit var binding: ActivityAddUpdateDishBinding
     private lateinit var customListDialog: Dialog
+    private var imagePath: String = ""
+
+    private val favDishViewModel: FavDishViewModel by viewModels {
+        FavDishViewModelFactory((application as FavDishApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +97,8 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                         .centerCrop()
                         .placeholder(R.drawable.gallery)
                         .into(binding.addDishImage)
+
+                    imagePath = saveImageToInternalStorage(data.extras!!.get("data") as Bitmap)
                 }
             } else if (requestCode == GALLERY) {
                 data?.let {
@@ -79,8 +106,37 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                         .with(this)
                         .load(data.data)
                         .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .listener(object: RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                Log.e("GallerySelection", "Error loading image!", e)
+                                return false
+                            }
+
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                resource?.let {
+                                    val bitmap: Bitmap = resource.toBitmap()
+                                    imagePath = saveImageToInternalStorage(bitmap)
+                                    Log.i("ImagePath", imagePath)
+                                }
+                                return false
+                            }
+
+                        })
                         .placeholder(R.drawable.add_image)
                         .into(binding.addDishImage)
+
                 }
             }
         } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -121,6 +177,7 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                     return
                 }
                 R.id.addDishButton -> {
+                    println(binding.addDishImage.drawable.toString())
                     addDish()
                 }
             }
@@ -128,30 +185,52 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun addDish() {
+        val title = binding.titleEditInput.text.toString()
+        val type = binding.typeEditInput.text.toString()
+        val category = binding.categoryEditInput.text.toString()
+        val ingredients = binding.ingredientsEditInput.text.toString()
+        val cookingTime = binding.cookingTimeMinutesEditInput.text.toString()
+        val directions = binding.directionsEditInput.text.toString()
+
         when {
-            binding.addDishImage.drawable == null -> {
+            imagePath.isEmpty() -> {
                 Toast.makeText(this@AddUpdateDishActivity, "Please include an image to dish!", Toast.LENGTH_SHORT).show()
             }
-            binding.titleEditInput.text.isNullOrEmpty() -> {
+            title.isEmpty() -> {
                 showError(binding.titleInput, "Please enter a title for the dish!")
             }
-            binding.typeEditInput.text.isNullOrEmpty() -> {
+            type.isEmpty() -> {
                 showError(binding.typeInput, "Please choose a type for the dish!")
             }
-            binding.categoryEditInput.text.isNullOrEmpty() -> {
+            category.isEmpty() -> {
                 showError(binding.categoryInput, "Please choose a category for the dish!")
             }
-            binding.ingredientsEditInput.text.isNullOrEmpty() -> {
+            ingredients.isEmpty() -> {
                 showError(binding.ingredientsInput, "Please enter the ingredients for the dish!")
             }
-            binding.cookingTimeMinutesEditInput.text.isNullOrEmpty() -> {
+            cookingTime.isEmpty() -> {
                 showError(binding.cookingTimeMinutesInput, "Please choose a cooking time for the dish!")
             }
-            binding.directionsEditInput.text.isNullOrEmpty() -> {
+            directions.isEmpty() -> {
                 showError(binding.directionsInput, "Please enter directions for the dish!")
             }
             else -> {
-                Toast.makeText(this@AddUpdateDishActivity, "Added dish!", Toast.LENGTH_SHORT).show()
+                val favDishDetails: FavDish = FavDish(
+                    imagePath,
+                    Constants.DISH_IMAGE_SOURCE_LOCAL,
+                    title,
+                    type,
+                    category,
+                    ingredients,
+                    cookingTime,
+                    directions,
+                    false
+                )
+
+                favDishViewModel.insert(favDishDetails)
+                Toast.makeText(this@AddUpdateDishActivity, "Dish added!", Toast.LENGTH_SHORT).show()
+                Log.i("AddedDish", "Successfully added dish!")
+                finish()
             }
         }
     }
@@ -245,6 +324,22 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                 binding.cookingTimeMinutesEditInput.setText(item)
             }
         }
+    }
+
+    private fun saveImageToInternalStorage(bitmap: Bitmap): String {
+        val wrapper = ContextWrapper(applicationContext)
+
+        var file = wrapper.getDir(IMAGE_DIRECTORY, Context.MODE_PRIVATE)
+        file = File(file, "${UUID.randomUUID()}.png")
+        try {
+            val stream: OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.flush()
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return file.absolutePath
     }
 
     private fun showRationalDialogForPermissions() {
