@@ -18,4 +18,6 @@
     <string name="selectImageAction">Select Image Action</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
+    <string name="item">Item</string>
+    <string name="listTitle">List Title</string>
 </resources>
