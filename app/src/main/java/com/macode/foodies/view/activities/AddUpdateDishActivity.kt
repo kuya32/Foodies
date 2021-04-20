@@ -14,12 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.textfield.TextInputLayout
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -56,6 +58,7 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         binding.typeEditInput.setOnClickListener(this)
         binding.categoryEditInput.setOnClickListener(this)
         binding.cookingTimeMinutesEditInput.setOnClickListener(this)
+        binding.addDishButton.setOnClickListener(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -117,6 +120,38 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                     customItemsDialog("Select Cooking Time in Minutes", Constants.dishCookingTimes(), Constants.DISH_COOKING_TIME)
                     return
                 }
+                R.id.addDishButton -> {
+                    addDish()
+                }
+            }
+        }
+    }
+
+    private fun addDish() {
+        when {
+            binding.addDishImage.drawable == null -> {
+                Toast.makeText(this@AddUpdateDishActivity, "Please include an image to dish!", Toast.LENGTH_SHORT).show()
+            }
+            binding.titleEditInput.text.isNullOrEmpty() -> {
+                showError(binding.titleInput, "Please enter a title for the dish!")
+            }
+            binding.typeEditInput.text.isNullOrEmpty() -> {
+                showError(binding.typeInput, "Please choose a type for the dish!")
+            }
+            binding.categoryEditInput.text.isNullOrEmpty() -> {
+                showError(binding.categoryInput, "Please choose a category for the dish!")
+            }
+            binding.ingredientsEditInput.text.isNullOrEmpty() -> {
+                showError(binding.ingredientsInput, "Please enter the ingredients for the dish!")
+            }
+            binding.cookingTimeMinutesEditInput.text.isNullOrEmpty() -> {
+                showError(binding.cookingTimeMinutesInput, "Please choose a cooking time for the dish!")
+            }
+            binding.directionsEditInput.text.isNullOrEmpty() -> {
+                showError(binding.directionsInput, "Please enter directions for the dish!")
+            }
+            else -> {
+                Toast.makeText(this@AddUpdateDishActivity, "Added dish!", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -160,6 +195,7 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                 override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
                     val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                     startActivityForResult(galleryIntent, GALLERY)
+                    dialog.dismiss()
                 }
 
                 override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
@@ -228,5 +264,10 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
             {dialog, _ ->
                 dialog.dismiss()
             }.show()
+    }
+
+    private fun showError(layout: TextInputLayout, message: String) {
+        layout.error = message
+        layout.requestFocus()
     }
 }

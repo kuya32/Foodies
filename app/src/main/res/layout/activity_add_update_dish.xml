@@ -215,6 +215,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/addDishButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_20sdp"
