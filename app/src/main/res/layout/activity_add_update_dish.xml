@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".view.activities.AddUpdateDishActivity">
 
     <include
@@ -35,7 +35,7 @@
                 android:backgroundTint="@color/grey"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" >
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/addDishImage"
@@ -43,16 +43,16 @@
                     android:layout_height="match_parent"
                     android:background="@color/grey"
                     android:contentDescription="@string/image"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="fitXY" />
 
                 <ImageView
                     android:id="@+id/addImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/add_image"
                     android:layout_gravity="bottom|end"
+                    android:layout_margin="@dimen/_20sdp"
                     android:contentDescription="@string/image"
-                    android:layout_margin="@dimen/_20sdp"/>
+                    android:src="@drawable/add_image" />
 
             </FrameLayout>
 
@@ -65,7 +65,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addDishImageFrame" >
+                app:layout_constraintTop_toBottomOf="@+id/addDishImageFrame">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -111,6 +111,8 @@
                             android:id="@+id/typeEditInput"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
                             android:hint="@string/type"
                             android:inputType="text"
                             android:textColor="@color/primaryDarkColor" />
@@ -133,6 +135,8 @@
                             android:id="@+id/categoryEditInput"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
                             android:hint="@string/category"
                             android:inputType="text"
                             android:textColor="@color/primaryDarkColor" />
@@ -155,10 +159,10 @@
                             android:id="@+id/ingredientsEditInput"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="top"
                             android:hint="@string/ingredients"
                             android:inputType="textMultiLine"
                             android:minLines="5"
-                            android:gravity="top"
                             android:textColor="@color/primaryDarkColor" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -179,6 +183,8 @@
                             android:id="@+id/cookingTimeMinutesEditInput"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
                             android:hint="@string/cookingTimeMinutes"
                             android:inputType="number"
                             android:textColor="@color/primaryDarkColor" />
@@ -195,16 +201,16 @@
                         app:hintTextColor="@color/primaryDarkColor"
                         app:layout_constraintEnd_toEndOf="@+id/cookingTimeMinutesInput"
                         app:layout_constraintStart_toStartOf="@+id/cookingTimeMinutesInput"
-                        app:layout_constraintTop_toBottomOf="@+id/cookingTimeMinutesInput" >
+                        app:layout_constraintTop_toBottomOf="@+id/cookingTimeMinutesInput">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/directionsEditInput"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="top"
                             android:hint="@string/directions"
                             android:inputType="textMultiLine"
                             android:minLines="5"
-                            android:gravity="top"
                             android:textColor="@color/primaryDarkColor" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -218,10 +224,10 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/_16sdp"
                         android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/directionsInput"
                         app:layout_constraintStart_toStartOf="@+id/directionsInput"
-                        app:layout_constraintTop_toBottomOf="@id/directionsInput"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
+                        app:layout_constraintTop_toBottomOf="@id/directionsInput" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
