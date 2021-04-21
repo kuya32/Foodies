@@ -3,23 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobileNavigation"
-    app:startDestination="@id/navigationHome">
+    app:startDestination="@id/navigationAllDishes">
 
     <fragment
-        android:id="@+id/navigationHome"
+        android:id="@+id/navigationAllDishes"
         tools:layout="@layout/fragment_all_dishes"
-        android:label="@string/titleHome"
-        android:name="com.macode.foodies.view.fragments.AllDishesFragment"/>
+        android:label="@string/titleAllDishes"
+        android:name="com.macode.foodies.view.fragments.AllDishesFragment">
+        <action
+            android:id="@+id/action_navigationAllDishes_to_navigationDishDetails"
+            app:destination="@id/navigationDishDetails" />
+    </fragment>
 
-    <fragment android:id="@+id/navigationDashboard"
-        tools:layout="@layout/fragment_dashboard"
-        android:label="@string/dashboard"
-        android:name="com.macode.foodies.view.fragments.DashboardFragment"/>
+    <fragment android:id="@+id/navigationFavoriteDishes"
+        tools:layout="@layout/fragment_favorite_dishes"
+        android:label="@string/titleFavoriteDishes"
+        android:name="com.macode.foodies.view.fragments.FavoriteDishesFragment"/>
 
     <fragment
-        android:id="@+id/navigationNotifications"
-        tools:layout="@layout/fragment_notification"
-        android:label="@string/notifications"
-        android:name="com.macode.foodies.view.fragments.NotificationFragment"/>
+        android:id="@+id/navigationRandomDish"
+        tools:layout="@layout/fragment_random_dish"
+        android:label="@string/titleRandomDish"
+        android:name="com.macode.foodies.view.fragments.RandomDishFragment"/>
+
+    <fragment
+        android:id="@+id/navigationDishDetails"
+        tools:layout="@layout/fragment_dish_details"
+        android:label="@string/titleDishDetails"
+        android:name="com.macode.foodies.view.fragments.DishDetailsFragment">
+        <argument
+            android:name="dishDetails"
+            app:argType="com.macode.foodies.model.entities.FavDish" />
+    </fragment>
 
 </navigation>

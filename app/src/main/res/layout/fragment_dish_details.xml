@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".view.fragments.DishDetailsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/dishDetailToolbar"
+            layout="@layout/main_toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dishDetailToolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/_10sdp"
+                    app:cardCornerRadius="@dimen/_15sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <FrameLayout
+                            android:id="@+id/dishDetailImageFrame"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_200sdp"
+                            android:backgroundTint="@color/grey"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:id="@+id/dishDetailImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:contentDescription="@string/image"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/food" />
+
+                            <FrameLayout
+                                android:id="@+id/favoriteButtonFrame"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="top|end"
+                                android:layout_margin="@dimen/_10sdp"
+                                android:background="@drawable/favorite_button_background" >
+
+                                <ImageView
+                                    android:id="@+id/favoriteButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:contentDescription="@string/image"
+                                    android:src="@drawable/favorite_unselected" />
+                            </FrameLayout>
+
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/dishDetailCookingTime"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:layout_marginStart="@dimen/_20sdp"
+                            android:layout_marginEnd="@dimen/_20sdp"
+                            android:gravity="center"
+                            android:hint="@string/cookingTimeMinutes"
+                            android:textColor="@color/grey"
+                            android:textColorHint="@color/grey"
+                            android:textSize="@dimen/_12sdp"
+                            android:textStyle="italic"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/dishDetailImageFrame" />
+
+                        <TextView
+                            android:id="@+id/dishDetailTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:gravity="center"
+                            android:hint="@string/title"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="@dimen/_25sdp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="@+id/dishDetailCookingTime"
+                            app:layout_constraintStart_toStartOf="@+id/dishDetailCookingTime"
+                            app:layout_constraintTop_toBottomOf="@+id/dishDetailCookingTime" />
+
+                        <View
+                            android:id="@+id/divider1"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_1sdp"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:background="@color/grey"
+                            app:layout_constraintEnd_toEndOf="@+id/dishDetailTitle"
+                            app:layout_constraintStart_toStartOf="@+id/dishDetailTitle"
+                            app:layout_constraintTop_toBottomOf="@+id/dishDetailTitle" />
+
+                        <TextView
+                            android:id="@+id/dishDetailType"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:gravity="center"
+                            android:hint="@string/type"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="@dimen/_18sdp"
+                            app:layout_constraintEnd_toEndOf="@+id/dishDetailTitle"
+                            app:layout_constraintStart_toStartOf="@+id/dishDetailTitle"
+                            app:layout_constraintTop_toBottomOf="@+id/divider1" />
+
+                        <TextView
+                            android:id="@+id/dishDetailCategory"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:gravity="center"
+                            android:hint="@string/category"
+                            android:textColor="@color/grey"
+                            android:textColorHint="@color/grey"
+                            android:textSize="@dimen/_16sdp"
+                            android:textStyle="italic"
+                            app:layout_constraintEnd_toEndOf="@+id/dishDetailType"
+                            app:layout_constraintStart_toStartOf="@+id/dishDetailType"
+                            app:layout_constraintTop_toBottomOf="@+id/dishDetailType" />
+
+                        <View
+                            android:id="@+id/divider2"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_1sdp"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:background="@color/grey"
+                            app:layout_constraintEnd_toEndOf="@+id/dishDetailCategory"
+                            app:layout_constraintStart_toStartOf="@+id/dishDetailCategory"
+                            app:layout_constraintTop_toBottomOf="@+id/dishDetailCategory" />
+
+                        <TextView
+                            android:id="@+id/dishDetailIngredientTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_10sdp"
+                            android:text="@string/ingredients"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_20sdp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+                        <TextView
+                            android:id="@+id/dishDetailIngredient"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_10sdp"
+                            android:hint="@string/ingredients"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="@dimen/_14sdp"
+                            app:layout_constraintEnd_toEndOf="@+id/dishDetailIngredientTitle"
+                            app:layout_constraintStart_toStartOf="@+id/dishDetailIngredientTitle"
+                            app:layout_constraintTop_toBottomOf="@+id/dishDetailIngredientTitle" />
+
+                        <View
+                            android:id="@+id/divider3"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_1sdp"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:background="@color/grey"
+                            app:layout_constraintEnd_toEndOf="@+id/dishDetailIngredientTitle"
+                            app:layout_constraintStart_toStartOf="@+id/dishDetailIngredientTitle"
+                            app:layout_constraintTop_toBottomOf="@+id/dishDetailIngredient" />
+
+                        <TextView
+                            android:id="@+id/dishDetailDirectionTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_10sdp"
+                            android:text="@string/directions"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_20sdp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/divider3" />
+
+                        <TextView
+                            android:id="@+id/dishDetailDirection"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_10sdp"
+                            android:hint="@string/directions"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="@dimen/_14sdp"
+                            app:layout_constraintEnd_toEndOf="@+id/dishDetailDirectionTitle"
+                            app:layout_constraintStart_toStartOf="@+id/dishDetailDirectionTitle"
+                            app:layout_constraintTop_toBottomOf="@+id/dishDetailDirectionTitle" />
+
+                        <View
+                            android:id="@+id/divider4"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_1sdp"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:background="@color/grey"
+                            app:layout_constraintEnd_toEndOf="@+id/dishDetailIngredientTitle"
+                            app:layout_constraintStart_toStartOf="@+id/dishDetailIngredientTitle"
+                            app:layout_constraintTop_toBottomOf="@+id/dishDetailDirection" />
+
+                        <ImageView
+                            android:id="@+id/endOfDetailLogo"
+                            android:layout_width="@dimen/_40sdp"
+                            android:layout_height="@dimen/_40sdp"
+                            android:contentDescription="@string/image"
+                            android:src="@drawable/foodies_logo"
+                            app:layout_constraintEnd_toEndOf="@+id/divider4"
+                            app:layout_constraintStart_toStartOf="@+id/divider4"
+                            app:layout_constraintTop_toBottomOf="@+id/divider4" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

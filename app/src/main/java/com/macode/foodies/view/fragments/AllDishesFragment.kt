@@ -8,16 +8,29 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.macode.foodies.R
+import com.macode.foodies.application.FavDishApplication
 import com.macode.foodies.databinding.FragmentAllDishesBinding
+import com.macode.foodies.model.entities.FavDish
 import com.macode.foodies.view.activities.AddUpdateDishActivity
+import com.macode.foodies.view.activities.MainActivity
+import com.macode.foodies.view.adapters.FavDishAdapter
+import com.macode.foodies.viewmodel.FavDishViewModel
+import com.macode.foodies.viewmodel.FavDishViewModelFactory
 import com.macode.foodies.viewmodel.HomeViewModel
 
 class AllDishesFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var binding: FragmentAllDishesBinding
+
+    private val favDishViewModel: FavDishViewModel by viewModels {
+        FavDishViewModelFactory((requireActivity().application as FavDishApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,18 +39,57 @@ class AllDishesFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        val binding = FragmentAllDishesBinding.inflate(inflater, container, false)
+        binding = FragmentAllDishesBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        setUpToolbar(view)
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.dishesListRecyclerView.layoutManager = GridLayoutManager(requireActivity(), 2)
+        val favDishAdapter = FavDishAdapter(this@AllDishesFragment)
+        binding.dishesListRecyclerView.adapter = favDishAdapter
+
+        favDishViewModel.allDishesList.observe(viewLifecycleOwner) {
+            dishes ->
+                dishes.let {
+                    if (it.isNotEmpty()) {
+                        binding.dishesListRecyclerView.visibility = View.VISIBLE
+                        binding.noDishesAddedText.visibility = View.GONE
+
+                        favDishAdapter.dishesList(it)
+                    } else {
+                        binding.dishesListRecyclerView.visibility = View.GONE
+                        binding.noDishesAddedText.visibility = View.VISIBLE
+                    }
+                }
+        }
+    }
+
+    fun dishDetails(favDish: FavDish) {
+        findNavController().navigate(AllDishesFragmentDirections.actionNavigationAllDishesToNavigationDishDetails(favDish))
+
+        if (requireActivity() is MainActivity) {
+            (activity as MainActivity?)!!.hideBottomNavigationView()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (requireActivity() is MainActivity) {
+            (activity as MainActivity?)!!.showBottomNavigationView()
+        }
+    }
+
+    private fun setUpToolbar(view: View) {
         val toolbar = view.findViewById<Toolbar>(R.id.allDishesToolbar)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Home"
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"))
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            binding.allDishesText.text = it
-        })
-
-        return view
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
