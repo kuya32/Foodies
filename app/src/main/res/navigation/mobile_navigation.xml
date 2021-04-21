@@ -9,7 +9,11 @@
         android:id="@+id/navigationAllDishes"
         tools:layout="@layout/fragment_all_dishes"
         android:label="@string/titleAllDishes"
-        android:name="com.macode.foodies.view.fragments.AllDishesFragment"/>
+        android:name="com.macode.foodies.view.fragments.AllDishesFragment">
+        <action
+            android:id="@+id/action_navigationAllDishes_to_navigationDishDetails"
+            app:destination="@id/navigationDishDetails" />
+    </fragment>
 
     <fragment android:id="@+id/navigationFavoriteDishes"
         tools:layout="@layout/fragment_favorite_dishes"
@@ -21,5 +25,15 @@
         tools:layout="@layout/fragment_random_dish"
         android:label="@string/titleRandomDish"
         android:name="com.macode.foodies.view.fragments.RandomDishFragment"/>
+
+    <fragment
+        android:id="@+id/navigationDishDetails"
+        tools:layout="@layout/fragment_dish_details"
+        android:label="@string/titleDishDetails"
+        android:name="com.macode.foodies.view.fragments.DishDetailsFragment">
+        <argument
+            android:name="dishDetails"
+            app:argType="com.macode.foodies.model.entities.FavDish" />
+    </fragment>
 
 </navigation>

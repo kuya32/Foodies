@@ -22,4 +22,6 @@
     <string name="listTitle">List Title</string>
     <string name="noDishesAdded">No dishes added yet</string>
     <string name="dishTitle">Dish Title</string>
+    <string name="titleDishDetails">Dish Details</string>
+    <string name="estimateCookingTime">"The approx time required to cook the dish is %1$s minutes."</string>
 </resources>

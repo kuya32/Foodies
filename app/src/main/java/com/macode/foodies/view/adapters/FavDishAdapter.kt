@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.macode.foodies.databinding.SingleDishItemBinding
 import com.macode.foodies.databinding.SingleItemListBinding
 import com.macode.foodies.model.entities.FavDish
+import com.macode.foodies.view.fragments.AllDishesFragment
 
 class FavDishAdapter(private val fragment: Fragment): RecyclerView.Adapter<FavDishAdapter.ViewHolder>() {
 
@@ -28,6 +29,12 @@ class FavDishAdapter(private val fragment: Fragment): RecyclerView.Adapter<FavDi
                 .load(dish.image)
                 .into(binding.singleDishImage)
             binding.singleDishTitle.text = dish.title
+
+            itemView.setOnClickListener {
+                if (fragment is AllDishesFragment) {
+                    fragment.dishDetails(dish)
+                }
+            }
         }
     }
 

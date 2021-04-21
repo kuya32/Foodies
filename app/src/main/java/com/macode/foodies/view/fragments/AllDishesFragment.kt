@@ -11,11 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.macode.foodies.R
 import com.macode.foodies.application.FavDishApplication
 import com.macode.foodies.databinding.FragmentAllDishesBinding
+import com.macode.foodies.model.entities.FavDish
 import com.macode.foodies.view.activities.AddUpdateDishActivity
+import com.macode.foodies.view.activities.MainActivity
 import com.macode.foodies.view.adapters.FavDishAdapter
 import com.macode.foodies.viewmodel.FavDishViewModel
 import com.macode.foodies.viewmodel.FavDishViewModelFactory
@@ -41,7 +44,6 @@ class AllDishesFragment : Fragment() {
 
         setUpToolbar(view)
 
-
         return view
     }
 
@@ -65,6 +67,21 @@ class AllDishesFragment : Fragment() {
                         binding.noDishesAddedText.visibility = View.VISIBLE
                     }
                 }
+        }
+    }
+
+    fun dishDetails(favDish: FavDish) {
+        findNavController().navigate(AllDishesFragmentDirections.actionNavigationAllDishesToNavigationDishDetails(favDish))
+
+        if (requireActivity() is MainActivity) {
+            (activity as MainActivity?)!!.hideBottomNavigationView()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (requireActivity() is MainActivity) {
+            (activity as MainActivity?)!!.showBottomNavigationView()
         }
     }
 
