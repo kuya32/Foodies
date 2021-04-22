@@ -31,4 +31,5 @@
     <string name="warning">Warning!</string>
     <string name="sort">Sort</string>
     <string name="selectItemToSortTitle">Select Item to Sort</string>
+    <string naeme="alreadyAddedToFavorite">You have already added the dish to your favorites!</string>
 </resources>
