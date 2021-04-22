@@ -18,7 +18,11 @@
     <fragment android:id="@+id/navigationFavoriteDishes"
         tools:layout="@layout/fragment_favorite_dishes"
         android:label="@string/titleFavoriteDishes"
-        android:name="com.macode.foodies.view.fragments.FavoriteDishesFragment"/>
+        android:name="com.macode.foodies.view.fragments.FavoriteDishesFragment">
+        <action
+            android:id="@+id/action_navigationFavoriteDishes_to_navigationDishDetails"
+            app:destination="@id/navigationDishDetails" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigationRandomDish"

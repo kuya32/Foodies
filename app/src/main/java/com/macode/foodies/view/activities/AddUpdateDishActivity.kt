@@ -67,6 +67,7 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityAddUpdateDishBinding
     private lateinit var customListDialog: Dialog
     private var imagePath: String = ""
+    private var editFavDishDetails: FavDish? = null
 
     private val favDishViewModel: FavDishViewModel by viewModels {
         FavDishViewModelFactory((application as FavDishApplication).repository)
@@ -77,7 +78,30 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityAddUpdateDishBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (intent.hasExtra(Constants.EXTRA_DISH_DETAILS)) {
+            editFavDishDetails = intent.getParcelableExtra(Constants.EXTRA_DISH_DETAILS)
+        }
+
         setUpToolbar()
+
+        editFavDishDetails?.let {
+            if (it.id != 0) {
+                imagePath = it.image
+                Glide
+                    .with(this@AddUpdateDishActivity)
+                    .load(imagePath)
+                    .centerCrop()
+                    .into(binding.addDishImage)
+                binding.titleEditInput.setText(it.title)
+                binding.typeEditInput.setText(it.type)
+                binding.categoryEditInput.setText(it.category)
+                binding.ingredientsEditInput.setText(it.ingredients)
+                binding.cookingTimeMinutesEditInput.setText(it.cookingTIme)
+                binding.directionsEditInput.setText(it.directionToCook)
+
+                binding.addDishButton.text = resources.getString(R.string.updateDish)
+            }
+        }
 
         binding.addImageButton.setOnClickListener(this)
         binding.typeEditInput.setOnClickListener(this)
@@ -147,8 +171,12 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
     private fun setUpToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.addDishToolbar)
         setSupportActionBar(toolbar)
+        if (editFavDishDetails != null && editFavDishDetails!!.id != 0) {
+            supportActionBar?.title = "Edit Dish"
+        } else {
+            supportActionBar?.title = "Add Dish"
+        }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Add Dish"
         supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"))
@@ -177,7 +205,6 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                     return
                 }
                 R.id.addDishButton -> {
-                    println(binding.addDishImage.drawable.toString())
                     addDish()
                 }
             }
@@ -185,6 +212,7 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun addDish() {
+        println("Hello")
         val title = binding.titleEditInput.text.toString()
         val type = binding.typeEditInput.text.toString()
         val category = binding.categoryEditInput.text.toString()
@@ -215,21 +243,40 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
                 showError(binding.directionsInput, "Please enter directions for the dish!")
             }
             else -> {
+                var dishID = 0
+                var imageSource = Constants.DISH_IMAGE_SOURCE_LOCAL
+                var favoriteDish = false
+
+                editFavDishDetails?.let {
+                    if (it.id != 0) {
+                        dishID = it.id
+                        imageSource = it.imageSource
+                        favoriteDish = it.favoriteDish
+                    }
+                }
+
                 val favDishDetails: FavDish = FavDish(
                     imagePath,
-                    Constants.DISH_IMAGE_SOURCE_LOCAL,
+                    imageSource,
                     title,
                     type,
                     category,
                     ingredients,
                     cookingTime,
                     directions,
-                    false
+                    favoriteDish,
+                    dishID
                 )
 
-                favDishViewModel.insert(favDishDetails)
-                Toast.makeText(this@AddUpdateDishActivity, "Dish added!", Toast.LENGTH_SHORT).show()
-                Log.i("AddedDish", "Successfully added dish!")
+                if (dishID == 0) {
+                    favDishViewModel.insert(favDishDetails)
+                    Toast.makeText(this@AddUpdateDishActivity, "Dish added!", Toast.LENGTH_SHORT).show()
+                    Log.i("AddedDish", "Successfully added dish!")
+                } else {
+                    favDishViewModel.update(favDishDetails)
+                    Toast.makeText(this@AddUpdateDishActivity, "Dish updated!", Toast.LENGTH_SHORT).show()
+                    Log.i("UpdateDish", "Successfully updated dish!")
+                }
                 finish()
             }
         }
@@ -303,7 +350,7 @@ class AddUpdateDishActivity : AppCompatActivity(), View.OnClickListener {
         binding.dialogListTitle.text = title
         binding.dialogListRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        val adapter = CustomListItemAdapter(this, itemsList, selection)
+        val adapter = CustomListItemAdapter(this, null, itemsList, selection)
         binding.dialogListRecyclerView.adapter = adapter
 
         customListDialog.show()

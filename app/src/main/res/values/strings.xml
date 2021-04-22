@@ -24,4 +24,11 @@
     <string name="dishTitle">Dish Title</string>
     <string name="titleDishDetails">Dish Details</string>
     <string name="estimateCookingTime">"The approx time required to cook the dish is %1$s minutes."</string>
+    <string name="noFavoriteDishesAdded">No favorite dishes added yet</string>
+    <string name="editDish">Edit Dish</string>
+    <string name="deleteDish">Delete Dish</string>
+    <string name="updateDish">Update Dish</string>
+    <string name="warning">Warning!</string>
+    <string name="sort">Sort</string>
+    <string name="selectItemToSortTitle">Select Item to Sort</string>
 </resources>
