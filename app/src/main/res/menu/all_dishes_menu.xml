@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/sortDishesAction"
+        android:title="@string/sort"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/sort" />
+
     <item
         android:id="@+id/addDishAction"
         android:title="@string/addDishAction"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/add" />
 </menu>
