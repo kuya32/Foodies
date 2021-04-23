@@ -1,9 +1,11 @@
 package com.macode.foodies.view.fragments
 
+import android.app.Dialog
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +31,7 @@ class RandomDishFragment : Fragment() {
 
     private var binding: FragmentRandomDishBinding? = null
     private lateinit var randomDishViewModel: RandomDishViewModel
+    private var progressDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,16 +70,27 @@ class RandomDishFragment : Fragment() {
     private fun randomDishViewModelObserver() {
         randomDishViewModel.randomDishResponse.observe(viewLifecycleOwner, {randomDishResponse ->
             randomDishResponse?.let {
+            if(binding!!.swipeRefreshRandomDishLayout.isRefreshing) {
+                binding!!.swipeRefreshRandomDishLayout.isRefreshing = false
+            }
             setRandomDishResponseInUI(randomDishResponse.recipes[0])
         }})
         randomDishViewModel.randomDishLoadingError.observe(viewLifecycleOwner, {dataError ->
             dataError?.let {
-
+            Log.e("Random Dish API Error", "$dataError")
+            if(binding!!.swipeRefreshRandomDishLayout.isRefreshing) {
+                binding!!.swipeRefreshRandomDishLayout.isRefreshing = false
+            }
         }})
 
         randomDishViewModel.loadRandomDish.observe(viewLifecycleOwner, {loadRandomDish ->
             loadRandomDish?.let {
-
+                Log.e("Random Dish Loading", "$loadRandomDish")
+                if (loadRandomDish && !binding!!.swipeRefreshRandomDishLayout.isRefreshing) {
+                    showCustomProgressDialog()
+                } else {
+                    hideCustomProgressDialog()
+                }
         }})
     }
 
@@ -117,33 +131,45 @@ class RandomDishFragment : Fragment() {
             binding!!.randomDishDirection.text = Html.fromHtml(recipe.instructions)
         }
 
+        binding!!.favoriteButton.setImageDrawable(
+            ContextCompat.getDrawable(requireActivity(), R.drawable.favorite_unselected)
+        )
+
+        var addedToFavorite = false
+
         binding!!.randomDishCookingTime.text = resources.getString(R.string.estimateCookingTime, recipe.readyInMinutes.toString())
 
+        // TODO: Repeated random dishes if originally added to favorites are being duplicated in the all dishes recycler view
         binding!!.favoriteButton.setOnClickListener {
-            val randomDishDetails = FavDish(
-                recipe.image,
-                Constants.DISH_IMAGE_SOURCE_ONLINE,
-                recipe.title,
-                dishType,
-                "Other",
-                ingredients,
-                recipe.readyInMinutes.toString(),
-                recipe.instructions,
-                true
-            )
 
-            val favDishViewModel: FavDishViewModel by viewModels {
-                FavDishViewModelFactory((requireActivity().application as FavDishApplication).repository)
+            if (addedToFavorite) {
+                Toast.makeText(requireActivity(), resources.getString(R.string.alreadyAddedToFavorite), Toast.LENGTH_SHORT).show()
+            } else {
+                val randomDishDetails = FavDish(
+                    recipe.image,
+                    Constants.DISH_IMAGE_SOURCE_ONLINE,
+                    recipe.title,
+                    dishType,
+                    "Other",
+                    ingredients,
+                    recipe.readyInMinutes.toString(),
+                    recipe.instructions,
+                    true
+                )
+
+                val favDishViewModel: FavDishViewModel by viewModels {
+                    FavDishViewModelFactory((requireActivity().application as FavDishApplication).repository)
+                }
+                favDishViewModel.insert(randomDishDetails)
+
+                addedToFavorite = true
+
+                binding!!.favoriteButton.setImageDrawable(
+                    ContextCompat.getDrawable(requireActivity(), R.drawable.favorite_selected)
+                )
+                Toast.makeText(requireActivity(), "Dish added to favorites!", Toast.LENGTH_SHORT).show()
             }
-            favDishViewModel.insert(randomDishDetails)
-
-            binding!!.favoriteButton.setImageDrawable(
-                ContextCompat.getDrawable(requireActivity(), R.drawable.favorite_selected)
-            )
-            Toast.makeText(requireActivity(), "Dish added to favorites!", Toast.LENGTH_SHORT).show()
         }
-
-
     }
 
     private fun setUpToolbar(view: View) {
@@ -151,5 +177,17 @@ class RandomDishFragment : Fragment() {
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Random Dish"
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"))
+    }
+
+    private fun showCustomProgressDialog() {
+        progressDialog = Dialog(requireActivity())
+        progressDialog?.let {
+            it.setContentView(R.layout.custom_progress_dialog)
+            it.show()
+        }
+    }
+
+    private fun hideCustomProgressDialog() {
+        progressDialog?.dismiss()
     }
 }
