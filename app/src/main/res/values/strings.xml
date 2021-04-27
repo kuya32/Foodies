@@ -33,4 +33,6 @@
     <string name="alreadyAddedToFavorite">You have already added the dish to your favorites!</string>
     <string name="pleaseWait">Please wait...</string>
     <string name="share">Share Dish</string>
+    <string name="notificationTitle">Checkout new dish recipes</string>
+    <string name="notificationSubtitle">Tap for more details</string>
 </resources>

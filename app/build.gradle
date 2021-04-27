@@ -103,4 +103,8 @@ dependencies {
     // RxAndroid
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
+
+    // Work Runtime KTX
+    def work_version = "2.5.0"
+    implementation "androidx.work:work-runtime-ktx:$work_version"
 }

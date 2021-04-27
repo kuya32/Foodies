@@ -30,6 +30,7 @@ class FavDishAdapter(private val fragment: Fragment): RecyclerView.Adapter<FavDi
         return ViewHolder(binding)
     }
 
+    // TODO: Figure out why the text view is changing in item view when editing other items text view
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dish = dishes[position]

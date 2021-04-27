@@ -21,6 +21,9 @@ object Constants {
     const val TAGS_VALUE: String = "vegetarian, dessert"
     const val NUMBER_VALUE: Int = 1
     const val API_KEY: String = BuildConfig.ApiKey
+    const val NOTIFICATION_ID = "FavDishNotificationID"
+    const val NOTIFICATION_NAME = "FavDish"
+    const val NOTIFICATION_CHANNEL = "FavDishChannel01"
 
     fun dishTypes(): ArrayList<String> {
         val list = ArrayList<String>()
