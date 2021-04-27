@@ -5,7 +5,6 @@
     <string name="titleRandomDish">Random Dish</string>
     <string name="splashScreenTitle">Foodies</string>
     <string name="image">Image</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="addDishAction">Add Dish</string>
     <string name="title">Title</string>
@@ -31,4 +30,9 @@
     <string name="warning">Warning!</string>
     <string name="sort">Sort</string>
     <string name="selectItemToSortTitle">Select Item to Sort</string>
+    <string name="alreadyAddedToFavorite">You have already added the dish to your favorites!</string>
+    <string name="pleaseWait">Please wait...</string>
+    <string name="share">Share Dish</string>
+    <string name="notificationTitle">Checkout new dish recipes</string>
+    <string name="notificationSubtitle">Tap for more details</string>
 </resources>

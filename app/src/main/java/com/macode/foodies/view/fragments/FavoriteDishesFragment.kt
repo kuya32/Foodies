@@ -9,8 +9,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.macode.foodies.R
@@ -19,7 +17,6 @@ import com.macode.foodies.databinding.FragmentFavoriteDishesBinding
 import com.macode.foodies.model.entities.FavDish
 import com.macode.foodies.view.activities.MainActivity
 import com.macode.foodies.view.adapters.FavDishAdapter
-import com.macode.foodies.viewmodel.DashboardViewModel
 import com.macode.foodies.viewmodel.FavDishViewModel
 import com.macode.foodies.viewmodel.FavDishViewModelFactory
 

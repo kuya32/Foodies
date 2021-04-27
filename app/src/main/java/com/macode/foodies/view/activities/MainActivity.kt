@@ -1,8 +1,6 @@
 package com.macode.foodies.view.activities
 
-import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -15,8 +13,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.*
 import com.macode.foodies.R
 import com.macode.foodies.databinding.ActivityMainBinding
+import com.macode.foodies.model.notifcation.NotifyWorker
+import com.macode.foodies.utilities.Constants
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,6 +38,13 @@ class MainActivity : AppCompatActivity() {
         ))
         setupActionBarWithNavController(navController, bottomNavigationConfiguration)
         binding.bottomNavView.setupWithNavController(navController)
+
+        if (intent.hasExtra(Constants.NOTIFICATION_ID)) {
+            val notificationID = intent.getIntExtra(Constants.NOTIFICATION_ID, 0)
+            binding.bottomNavView.selectedItemId = R.id.navigationRandomDish
+        }
+
+        startWork()
     }
 
     private fun setUpActionBar() {
@@ -43,6 +52,21 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         toolbar.title = "Foodies"
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFFFF"))
+    }
+
+    private fun createdConstraints() = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+        .setRequiresCharging(false)
+        .setRequiresBatteryNotLow(true)
+        .build()
+
+    private fun createWorkRequest() = PeriodicWorkRequestBuilder<NotifyWorker>(15, TimeUnit.MINUTES)
+        .setConstraints(createdConstraints())
+        .build()
+
+    private fun startWork() {
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork("FavDish Notify Work", ExistingPeriodicWorkPolicy.KEEP, createWorkRequest())
     }
 
     override fun onSupportNavigateUp(): Boolean {

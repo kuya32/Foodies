@@ -1,13 +1,14 @@
 package com.macode.foodies.view.fragments
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -24,6 +25,8 @@ import com.bumptech.glide.request.target.Target
 import com.macode.foodies.R
 import com.macode.foodies.application.FavDishApplication
 import com.macode.foodies.databinding.FragmentDishDetailsBinding
+import com.macode.foodies.model.entities.FavDish
+import com.macode.foodies.utilities.Constants
 import com.macode.foodies.viewmodel.FavDishViewModel
 import com.macode.foodies.viewmodel.FavDishViewModelFactory
 import java.io.IOException
@@ -31,6 +34,7 @@ import java.io.IOException
 class DishDetailsFragment : Fragment() {
 
     private var binding: FragmentDishDetailsBinding? = null
+    private var favDishDetails: FavDish? = null
 
     private val favDishViewModel: FavDishViewModel by viewModels {
         FavDishViewModelFactory(((requireActivity().application) as FavDishApplication).repository)
@@ -56,6 +60,9 @@ class DishDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: DishDetailsFragmentArgs by navArgs()
+
+        favDishDetails = args.dishDetails
+
         args.let {
             try {
                 binding?.let { it1 ->
@@ -101,7 +108,17 @@ class DishDetailsFragment : Fragment() {
             binding!!.dishDetailType.text = it.dishDetails.type
             binding!!.dishDetailCategory.text = it.dishDetails.category
             binding!!.dishDetailIngredient.text = it.dishDetails.ingredients
-            binding!!.dishDetailDirection.text = it.dishDetails.directionToCook
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                binding!!.dishDetailDirection.text = Html.fromHtml(
+                    it.dishDetails.directionToCook,
+                    Html.FROM_HTML_MODE_COMPACT
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                binding!!.dishDetailDirection.text = Html.fromHtml(it.dishDetails.directionToCook)
+            }
+
             binding!!.dishDetailCookingTime.text = resources.getString(R.string.estimateCookingTime, it.dishDetails.cookingTIme)
 
             if(args.dishDetails.favoriteDish) {
@@ -126,10 +143,60 @@ class DishDetailsFragment : Fragment() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.share_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.shareDish -> {
+                val type = "text/plain"
+                val subject = "Checkout this dish recipe"
+                var extraText = ""
+                val shareWith = "Share with"
+
+                favDishDetails.let {
+                    var image = ""
+                    if (it!!.imageSource == Constants.DISH_IMAGE_SOURCE_ONLINE) {
+                        image = it.image
+                    }
+
+                    var cookingInstructions = ""
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        cookingInstructions = Html.fromHtml(
+                            it.directionToCook,
+                            Html.FROM_HTML_MODE_COMPACT
+                        ).toString()
+                    } else {
+                        @Suppress("DEPRECATION")
+                        cookingInstructions = Html.fromHtml(it.directionToCook).toString()
+                    }
+
+                    extraText =
+                        "$image \n" +
+                                "\n Title:  ${it.title} \n\n Type: ${it.type} \n\n Category: ${it.category}" +
+                                "\n\n Ingredients: \n ${it.ingredients} \n\n Instructions To Cook: \n $cookingInstructions" +
+                                "\n\n Time required to cook the dish approx ${it.cookingTIme} minutes."
+                }
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = type
+                intent.putExtra(Intent.EXTRA_SUBJECT, subject)
+                intent.putExtra(Intent.EXTRA_TEXT, extraText)
+                startActivity(Intent.createChooser(intent, shareWith))
+
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         binding = null
     }
+
+
 
     private fun setUpToolbar(view: View) {
         val toolbar = view.findViewById<Toolbar>(R.id.dishDetailToolbar)

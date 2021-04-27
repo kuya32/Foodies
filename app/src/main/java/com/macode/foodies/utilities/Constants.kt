@@ -1,5 +1,7 @@
 package com.macode.foodies.utilities
 
+import com.macode.foodies.BuildConfig
+
 object Constants {
     const val DISH_TYPES: String = "DishType"
     const val DISH_CATEGORY: String ="DishCategory"
@@ -9,6 +11,19 @@ object Constants {
     const val EXTRA_DISH_DETAILS: String = "DishDetails"
     const val ALL_ITEMS: String = "All"
     const val FILTER_SELECTION: String = "FilerSelection"
+    const val API_ENDPOINT: String = "recipes/random"
+    const val API_KEY_TAG: String = "apiKey"
+    const val LIMIT_LICENSE: String = "limitLicense"
+    const val TAGS: String = "tags"
+    const val NUMBER: String = "number"
+    const val BASE_URL: String = "https://api.spoonacular.com/"
+    const val LIMIT_LICENSE_VALUE: Boolean = true
+    const val TAGS_VALUE: String = "vegetarian, dessert"
+    const val NUMBER_VALUE: Int = 1
+    const val API_KEY: String = BuildConfig.ApiKey
+    const val NOTIFICATION_ID = "FavDishNotificationID"
+    const val NOTIFICATION_NAME = "FavDish"
+    const val NOTIFICATION_CHANNEL = "FavDishChannel01"
 
     fun dishTypes(): ArrayList<String> {
         val list = ArrayList<String>()

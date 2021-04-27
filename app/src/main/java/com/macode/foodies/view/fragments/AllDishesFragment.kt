@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -17,8 +16,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +23,6 @@ import com.macode.foodies.R
 import com.macode.foodies.application.FavDishApplication
 import com.macode.foodies.databinding.CustomListDialogBinding
 import com.macode.foodies.databinding.FragmentAllDishesBinding
-import com.macode.foodies.databinding.SingleItemListBinding
 import com.macode.foodies.model.entities.FavDish
 import com.macode.foodies.utilities.Constants
 import com.macode.foodies.view.activities.AddUpdateDishActivity
@@ -35,7 +31,6 @@ import com.macode.foodies.view.adapters.CustomListItemAdapter
 import com.macode.foodies.view.adapters.FavDishAdapter
 import com.macode.foodies.viewmodel.FavDishViewModel
 import com.macode.foodies.viewmodel.FavDishViewModelFactory
-import com.macode.foodies.viewmodel.HomeViewModel
 
 class AllDishesFragment : Fragment() {
 
